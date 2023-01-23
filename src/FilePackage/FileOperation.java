@@ -63,18 +63,21 @@ public class FileOperation {
     {
         File Sfile = createDir();
         String[] SearchFile = Sfile.list();
-
+        Boolean flage=true;
             for (int i = 0; i < SearchFile.length; i++) {
                 if (fileName.equals(SearchFile[i])) {
                     System.out.println(" File Exist Name is " + fileName);
+                    flage=true;
+                    break;
                 }
                 else {
 
-                        System.out.println("does not exist or is not a directory");
-                        break;
+                    flage= false;
                 }
 
             }
+            if (flage==false)
+            {    System.out.println("does not exist or is not a directory");}
 
 
     }
