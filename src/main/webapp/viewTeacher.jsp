@@ -1,0 +1,58 @@
+<%@page import="com.entity.Subject"%>
+<%@page import="com.entity.Teacher"%>
+<%@page import="java.util.List"%>
+<%@page import="org.hibernate.Session"%>
+<%@page import="com.resource.HibernateUtil"%>
+<%@page import="org.hibernate.SessionFactory"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<a href="index.jsp">Back to Main Menu</a><br>
+<a href="addTeacher.jsp">Add Teacher</a><br>
+<a href="AssignTeacherToSubject.jsp">Assign Teacher to Subject</a><br>
+
+<h1>The Following Teachers are listed</h1>
+<%
+	SessionFactory sf  = HibernateUtil.buildSessionFactory();
+	Session hibernateSession = sf.openSession();
+	List<Teacher> teachers = hibernateSession.createQuery("from Teacher").list();
+%>
+<table border="1">
+<tr>
+<th>First Name </th>
+<th>Assigned Subject</th>
+</tr>
+	<%		
+		for(Teacher teacher : teachers){
+			out.print("<tr>");	
+			out.print("<td>" + teacher.getName() + "</td>");
+	
+			
+			StringBuffer buf = new StringBuffer();
+			boolean first = true;
+			for (Subject subject : teacher.getSubjects()){
+				if(first== true){
+					buf.append("<td>" + subject.getName() + "</td>");
+					buf.append("</tr>");
+					first = false;
+				}else{
+					buf.append("<tr><td></td><td></td>");
+					buf.append("<td>" + subject.getName() + "</td>");
+					buf.append("</tr>");
+				}
+				
+			}
+			out.print(buf.toString());
+		}
+	%>
+</table>
+
+</body>
+</html>
