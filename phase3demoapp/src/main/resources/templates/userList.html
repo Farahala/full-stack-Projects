@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+</head>
+<body>
+    <h2>User List</h2>
+    
+    <!-- Search Form -->
+    <form th:action="@{/search}" method="get">
+        <input type="text" name="keyword" placeholder="Search by email">
+        <button type="submit">Search</button>
+    </form>
+    
+    <table>
+        <tr>
+            <th>Email</th>
+            <!-- Add more columns as needed -->
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.emailid}"></td>
+            <!-- Add more cells for other user attributes -->
+        </tr>
+    </table>
+</body>
+</html>
