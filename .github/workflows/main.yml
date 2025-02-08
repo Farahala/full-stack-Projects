@@ -1,0 +1,58 @@
+name: InfluxDB and Grafana CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  influxdb-grafana:
+    runs-on: ubuntu-latest
+
+    services:
+      influxdb:
+        image: influxdb:latest
+        ports:
+          - 8086:8086
+        options: >-
+          --health-cmd="curl --silent --fail http://localhost:8086/ping || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      grafana:
+        image: grafana/grafana:latest
+        ports:
+          - 3000:3000
+        options: >-
+          --health-cmd="curl --silent --fail http://localhost:3000/api/health || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Wait for InfluxDB to be ready
+      run: |
+        while ! curl --silent --fail http://localhost:8086/ping; do
+          echo "Waiting for InfluxDB to be ready..."
+          sleep 5
+        done
+      shell: bash
+
+    - name: Wait for Grafana to be ready
+      run: |
+        while ! curl --silent --fail http://localhost:3000/api/health; do
+          echo "Waiting for Grafana to be ready..."
+          sleep 5
+        done
+      shell: bash
+
+    - name: Run tests
+      run: |
+        echo "Running tests that interact with InfluxDB and Grafana"
+        # Add your test commands here
+      shell: bash
